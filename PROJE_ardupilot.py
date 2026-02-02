@@ -128,6 +128,6 @@ for i in hedef_listesi:
 
     wp_sayac += 1
 
-print("\nGorev bitti, RTL yapiliyor")
+print("\nGorev bitti RTL yapiliyor")
 drone.groundspeed = 3
 drone.mode = VehicleMode("RTL")
