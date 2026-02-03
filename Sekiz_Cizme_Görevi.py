@@ -41,7 +41,7 @@ def arm_ve_takeoff():
             print("İstenilen yüksekliğe ulaşildi")
             break
         time.sleep(1)
-    print("Merkeze alınarak sekiz çizme görevi başlatılıyor")
+    print("Merkeze alınarak sekiz çizme görevi başlatiliyor")
     durum = "MERKEZE_AL"
     
 def metreye_cevir(x,lat_mi=True):
