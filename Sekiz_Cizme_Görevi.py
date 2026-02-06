@@ -13,7 +13,7 @@ print("Drone baglandi.")
 
 #Gerekli değişkenleri tanımladım
 p_katsayisi = 0.5
-i_katsayisi = 0.0
+i_katsayisi = 0.05
 d_katsayisi = 0.2
 x_toplam_hata = 0.0
 y_toplam_hata = 0.0
@@ -112,6 +112,10 @@ def body_hiz(drone,ileri_hiz, saga_hiz, yukari_hiz,):#Bodye donusturdugum değer
 #Log olusturmak için gerekli değişkenler
 x_referans_log , y_referans_log = [],[]
 x_gercek_log , y_gercek_log = [], []
+x_hata_log, y_hata_log = [],[]
+x_hiz_log ,y_hiz_log = [], []
+
+
 
 arm_ve_takeoff()
 
@@ -146,8 +150,12 @@ while durum != "BITIS":
 
         #X hızını pid ye gore güncelliyorum
         x_hiz = pid_x(x_hata,guncelleme_suresi)
+        if x_hiz > hiz_limit: x_hiz = hiz_limit
+        elif x_hiz < -hiz_limit : x_hiz = -hiz_limit
         #Y hızını pid ye gore güncelliyorum
         y_hiz = pid_y(y_hata, guncelleme_suresi)
+        if y_hiz > hiz_limit:y_hiz = hiz_limit
+        elif y_hiz< -hiz_limit: y_hiz = -hiz_limit
 
 
         drone_yon = drone.attitude.yaw
@@ -160,6 +168,10 @@ while durum != "BITIS":
         y_referans_log.append(y_referans)
         x_gercek_log.append(x_gercek_mesafe)
         y_gercek_log.append(y_gercek_mesafe)
+        x_hiz_log.append(ileri_hiz)
+        y_hiz_log.append(saga_hiz)
+        x_hata_log.append(x_hata)
+        y_hata_log.append(y_hata)
 
         toplam_mesafe_suresi = (2 * math.pi / hiz) * tur_sayisi
 
@@ -179,7 +191,6 @@ while durum != "BITIS":
         durum = "BITIS"
     time.sleep(guncelleme_suresi)
 print("Program Sonlandi.")
-
 #Son olarak logları grafık haline getiriyorum
 plt.plot(y_referans_log, x_referans_log, 'r--', label='Referans')
 plt.plot(y_gercek_log, x_gercek_log, 'b-', label='Gerçek')
