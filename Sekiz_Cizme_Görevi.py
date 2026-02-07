@@ -6,6 +6,7 @@ from pymavlink import mavutil
 import time
 import math
 import matplotlib.pyplot as plt
+import json
 
 
 drone = connect('udp:127.0.0.1:14550', wait_ready=True)
@@ -175,6 +176,11 @@ while durum != "BITIS":
 
         toplam_mesafe_suresi = (2 * math.pi / hiz) * tur_sayisi
 
+        print(f"X mesafe: {x_gercek_log[-1]:.3f}, Y mesafe: {y_gercek_log[-1]:.3f}")
+        print(f"İleri hiz: {x_hiz_log[-1]:.3f}, Sağa hiz: {y_hiz_log[-1]:.3f}")
+        print(f"X hata: {x_hata_log[-1]:.3f}, Y hata {y_hata_log[-1]:.3f}")
+        print("----------------------------------------------------------------")
+
         if t > toplam_mesafe_suresi:
             durum = "BEKLEME"
             print("Referans nokta yakalandı ve süre doldu. Görev Bitti.")
@@ -191,6 +197,24 @@ while durum != "BITIS":
         durum = "BITIS"
     time.sleep(guncelleme_suresi)
 print("Program Sonlandi.")
+
+log_verileri = {
+    "x_referans": x_referans_log,
+    "y_referans": y_referans_log,
+    "x_gercek": x_gercek_log,
+    "y_gercek": y_gercek_log,
+    "x_hiz": x_hiz_log,
+    "y_hiz": y_hiz_log,
+    "x_hata": x_hata_log,
+    "y_hata": y_hata_log
+}
+
+dosya_adi = "ucus_loglari.json"
+with open(dosya_adi, "w") as f:
+    json.dump(log_verileri, f,indent=4) 
+
+print(f"Veriler {dosya_adi} dosyasına kaydedildi.")
+
 #Son olarak logları grafık haline getiriyorum
 plt.plot(y_referans_log, x_referans_log, 'r--', label='Referans')
 plt.plot(y_gercek_log, x_gercek_log, 'b-', label='Gerçek')
